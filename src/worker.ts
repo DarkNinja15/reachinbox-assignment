@@ -2,6 +2,7 @@ import { Queue, Worker } from "bullmq";
 import { REDIS_CONFIG } from "./config/redis.confi";
 import { FETCH_EMAILS_QUEUE, SEND_REPLIES_QUEUE } from "./constants/constants";
 import { GmailService } from "./services/gmail.service";
+import { generateReplyContent, getLabel } from "./utils/utils";
 
 const fetchEmailsQueue = new Queue(FETCH_EMAILS_QUEUE, {
     connection: REDIS_CONFIG
@@ -39,17 +40,27 @@ const replySendingWorker = new Worker(
     async (job) => {
         const { tokens, emailData } = job.data;
         const gmailService = new GmailService(tokens);
+
+        const label = await getLabel(emailData.content);
+
+        const content = await generateReplyContent(emailData.content,emailData.subject,label);
         
-        const replyContent = `Thank you for your email regarding "${emailData.subject}".\n\n`
+        const replyContent = `Thank you for your email regarding "${content}".\n\n`
             + "I am currently out of office and will respond to your message as soon as possible.\n\n"
             + "Best regards";
+
+        const subject = `[${label.toUpperCase()}] ${emailData.subject}`;
         
         const replyData: ReplyData = {
-            to: emailData.from,
-            subject: emailData.subject,
+            // to: emailData.from,
+            to: "animeshshukla1518@gmail.com",
+            subject: subject,
             content: replyContent,
-            threadId: emailData.threadId
+            threadId: emailData.threadId,
+            label: label
         };
+
+        console.log(replyData);
         
         await gmailService.sendReply(replyData);
 

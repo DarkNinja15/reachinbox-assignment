@@ -18,7 +18,7 @@ export class GmailService {
         this.gmail = google.gmail({ version: 'v1', auth: this.oauth2Client });
     }
 
-    async listEmails(maxResults = 10): Promise<EmailData[]> {
+    async listEmails(maxResults = 1): Promise<EmailData[]> {
         try {
             const response = await this.gmail.users.messages.list({
                 userId: 'me',

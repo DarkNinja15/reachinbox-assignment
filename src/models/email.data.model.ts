@@ -12,4 +12,5 @@ interface ReplyData {
     subject: string;
     content: string;
     threadId: string;
+    label: string;
 }
