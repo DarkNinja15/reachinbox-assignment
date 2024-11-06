@@ -20,7 +20,6 @@ const emailFetchingWorker = new Worker(
         const emails = await gmailService.listEmails();
         console.log(emails);
         
-        // Add each email to the reply queue
         for (const email of emails) {
             await sendRepliesQueue.add('process-reply', {
                 tokens,
@@ -32,6 +31,34 @@ const emailFetchingWorker = new Worker(
     },
     {
         connection: REDIS_CONFIG
+    }
+);
+
+const replySendingWorker = new Worker(
+    SEND_REPLIES_QUEUE, 
+    async (job) => {
+        const { tokens, emailData } = job.data;
+        const gmailService = new GmailService(tokens);
+        
+        const replyContent = `Thank you for your email regarding "${emailData.subject}".\n\n`
+            + "I am currently out of office and will respond to your message as soon as possible.\n\n"
+            + "Best regards";
+        
+        const replyData: ReplyData = {
+            to: emailData.from,
+            subject: emailData.subject,
+            content: replyContent,
+            threadId: emailData.threadId
+        };
+        
+        await gmailService.sendReply(replyData);
+
+        console.log(`Sent reply to ${emailData.from}`);
+        
+        // return `Sent reply to ${emailData.from}`;
+    },
+    { 
+        connection: REDIS_CONFIG,
     }
 );
 
