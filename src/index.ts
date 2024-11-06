@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { GoogleOAuthService } from "./services/google.oauth.service";
+import { startEmailProcessing } from "./worker";
 
 dotenv.config();
 
@@ -32,6 +33,8 @@ app.get('/auth/google/callback', async (req, res) => {
         
 
         console.log(tokens.access_token);
+
+        await startEmailProcessing(tokens);
 
         res.send(`
             <h1>Login Successful!</h1>
