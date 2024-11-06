@@ -42,5 +42,25 @@ In this assignment I developed a server with nodejs and typescript.
     ```
 5. Now just go to http://localhost:PORT in your browser to acess it.
 
+## Folder Structure
+
+```
+src/
+├── config/
+│   └── redis.conf.ts       # Redis configuration settings
+├── constants/
+│   └── constants.ts        # Project-wide constants and enums
+├── models/
+│   ├── email.data.model.ts # Email data type definitions
+│   └── google.model.ts     # Google service related interfaces
+├── services/
+│   ├── gmail.service.ts    # Gmail API integration service
+│   └── google.oauth.service.ts # Google OAuth authentication service
+└── utils/
+    ├── utils.ts           # Utility functions
+    ├── index.ts          # Main entry point
+    └── worker.ts         # Background worker functionality
+```
+
 
 
