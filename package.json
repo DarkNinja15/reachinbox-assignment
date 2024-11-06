@@ -3,7 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "dev": "tsc -b && node dist/index.js"
+  },
   "devDependencies": {
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@types/axios": "^0.9.36",
+    "@types/express": "^5.0.0",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1"
   }
 }
