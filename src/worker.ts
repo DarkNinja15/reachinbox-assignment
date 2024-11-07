@@ -52,8 +52,7 @@ const replySendingWorker = new Worker(
         const subject = `[${label.toUpperCase()}] ${emailData.subject}`;
         
         const replyData: ReplyData = {
-            // to: emailData.from,
-            to: "animeshshukla1518@gmail.com",
+            to: emailData.from,
             subject: subject,
             content: replyContent,
             threadId: emailData.threadId,
